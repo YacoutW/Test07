@@ -14,11 +14,13 @@ public class BaseTest {
     @BeforeMethod
     public void setUp() {
         String browser = ConfigReader.get("browser");
-        if (browser.equalsIgnoreCase("chrome")) {
+        if (browser != null && browser.trim().equalsIgnoreCase("chrome")) {
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--remote-allow-origins=*");
             WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver(options);
+        } else {
+            throw new RuntimeException("Unsupported or missing browser value: '" + browser + "'. Only 'chrome' is supported.");
         }
         driver.manage().window().maximize();
         driver.get(ConfigReader.get("baseUrl"));
